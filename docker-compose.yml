@@ -1,0 +1,39 @@
+services:
+  books:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      - DB_HOST=dbpostgres
+      - DB_PORT=5432
+      - DB_NAME=dbname
+      - DB_LOGIN=admin
+      - DB_PASS=drowssap
+      - PROVIDER_PORT=5001
+      - HTTP_PORT=8081
+    depends_on:
+      - dbpostgres
+    networks:
+      - golibrary_shared
+
+  dbpostgres:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: dbname
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: drowssap
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - golibrary_shared
+
+volumes:
+  postgres_data:
+
+networks:
+  golibrary_shared:
+    external: true
+
+
